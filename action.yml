@@ -10,8 +10,6 @@ outputs:
   version:
     description: "The version of Conan which was installed"
     value: ${{ steps.output_version.outputs.version }}
-env:
-  IS_MAC: ${{ runner.os == 'macOS' }}
 runs:
   using: "composite"
   steps:
@@ -20,19 +18,19 @@ runs:
       run: pip3 install wheel setuptools
       shell: bash
     - name: Install conan latest (pip)
-      if: ${{ inputs.version == '' && !env.IS_MAC  }}
+      if: ${{ inputs.version == '' && runner.os != 'macOS'  }}
       run: pip3 install conan --upgrade
       shell: bash
     - name: Install conan version ${{ inputs.version }} (pip)
-      if: ${{ inputs.version != '' && !env.IS_MAC }}
+      if: ${{ inputs.version != '' && runner.os != 'macOS' }}
       run: pip3 install conan==${{ inputs.version }} --upgrade
       shell: bash
     - name: Install conan latest (brew)
-      if: ${{ inputs.version == '' && env.IS_MAC  }}
+      if: ${{ inputs.version == '' && runner.os == 'macOS'  }}
       run: brew install conan
       shell: bash
     - name: Install conan version ${{ inputs.version }} (brew)
-      if: ${{ inputs.version != '' && env.IS_MAC }}
+      if: ${{ inputs.version != '' && runner.os == 'macOS' }}
       run: brew install conan@${{ inputs.version }}
       shell: bash
     - name: Fix path on Linux
