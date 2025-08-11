@@ -14,7 +14,7 @@ runs:
   using: "composite"
   steps:
     - name: Install setup tools
-      if: ${{ !env.IS_MAC }}
+      if: ${{ runner.os != 'macOS' }}
       run: pip3 install wheel setuptools
       shell: bash
     - name: Install conan latest (pip)
